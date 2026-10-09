@@ -101,7 +101,7 @@ def index_content(label, body, title, term_name):
     section = class_content(label, main, "section", "taxonomy-index")
     term_pattern = rf'<li class="taxonomy-index-item">\s*<a\b[^>]*>{re.escape(term_name)}</a>\s*<span class="taxonomy-index-count">1</span>'
     if re.search(term_pattern, section) is None:
-        raise AssertionError(f"{label}: missing indexed term and count: {term_name}")
+        raise AssertionError(f"{label}: missing indexed term and count: {term_name}; section={section.strip()[:600]!r}")
     return main
 
 
