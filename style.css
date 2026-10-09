@@ -434,6 +434,7 @@ body.search .archive-header .search-form {
 
 .search-field {
 	width: 100%;
+	border-color: var(--plain-log-muted);
 }
 
 .search-submit,
