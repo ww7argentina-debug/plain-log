@@ -1222,7 +1222,7 @@ body.search .archive-header .search-form {
 	.page-links,
 	.comments-area,
 	.search-form,
-	.code-toolbar,
+	.single-entry .entry-content .code-toolbar,
 	.code-copy-button,
 	.code-line-numbers {
 		display: none;
