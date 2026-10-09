@@ -52,14 +52,30 @@ wp theme is-active plain-log
 
 post_id=$(wp post create --post_type=post --post_status=publish --post_title='CIUniqueTokenAlpha article' --post_content=$'<p>CI_POST_FIRST_PAGE</p>\n<!--nextpage-->\n<p>CI_POST_SECOND_PAGE</p>' --porcelain)
 page_id=$(wp post create --post_type=page --post_status=publish --post_name=ci-paginated-page --post_title='CI paginated page' --post_content=$'<p>CI_PAGE_FIRST_PAGE</p>\n<!--nextpage-->\n<p>CI_PAGE_SECOND_PAGE</p>' --porcelain)
-if [[ ! "$post_id" =~ ^[0-9]+$ || ! "$page_id" =~ ^[0-9]+$ ]]; then
-  echo 'WP-CLI did not return numeric test post and page IDs.' >&2
+category_id=$(wp term create category 'CI Category Alpha' --slug=ci-category-alpha --porcelain)
+tag_id=$(wp term create post_tag 'CI Tag Alpha' --slug=ci-tag-alpha --porcelain)
+categories_page_id=$(wp post create --post_type=page --post_status=publish --post_name=categories --post_title='CI Categories index' --post_content=$'<!--nextpage-->\n<p>CI_CATEGORY_PAGE_TWO</p>' --porcelain)
+tags_page_id=$(wp post create --post_type=page --post_status=publish --post_name=tags --post_title='CI Tags index' --post_content=$'<p>CI_TAG_PAGE_ONE</p>\n<!--nextpage-->\n<!--nextpage-->\n<p>CI_TAG_PAGE_THREE</p>' --porcelain)
+if [[ ! "$post_id" =~ ^[0-9]+$ || ! "$page_id" =~ ^[0-9]+$ || ! "$category_id" =~ ^[0-9]+$ || ! "$tag_id" =~ ^[0-9]+$ || ! "$categories_page_id" =~ ^[0-9]+$ || ! "$tags_page_id" =~ ^[0-9]+$ ]]; then
+  echo 'WP-CLI did not return numeric test post, page, or term IDs.' >&2
   exit 1
 fi
+wp post term add "$post_id" category "$category_id"
+wp post term add "$post_id" post_tag "$tag_id"
 
 post_url=$(wp post url "$post_id")
 page_url=$(wp post url "$page_id")
+categories_url=$(wp post url "$categories_page_id")
+tags_url=$(wp post url "$tags_page_id")
 echo "WordPress: $(wp core version)"
 echo "Web PHP: $("${compose[@]}" exec -T wordpress php -r 'echo PHP_VERSION;')"
-echo "Test post ID: $post_id; test page ID: $page_id"
-python3 tests/integration/check_http.py "$site_url" "$post_url" "$page_url"
+echo "Test post ID: $post_id; test page IDs: $page_id, $categories_page_id, $tags_page_id"
+python3 tests/integration/check_http.py "$site_url" "$post_url" "$page_url" "$categories_url" "$tags_url"
+
+wp post update "$categories_page_id" --post_content='<p>CI_CATEGORY_PLAIN_CONTENT</p>'
+wp post update "$tags_page_id" --post_content='<p>CI_TAG_PLAIN_CONTENT</p>'
+python3 tests/integration/check_http.py --plain-index "$site_url" "$categories_url" "$tags_url"
+
+wp post update "$categories_page_id" --post_content=$'<p>CI_CATEGORY_SECRET_ONE</p>\n<!--nextpage-->\n<p>CI_CATEGORY_SECRET_TWO</p>' --post_password=ci-only-password
+wp post update "$tags_page_id" --post_content=$'<p>CI_TAG_SECRET_ONE</p>\n<!--nextpage-->\n<p>CI_TAG_SECRET_TWO</p>' --post_password=ci-only-password
+python3 tests/integration/check_http.py --protected-index "$site_url" "$categories_url" "$tags_url"
