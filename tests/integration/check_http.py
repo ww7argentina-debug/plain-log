@@ -138,11 +138,14 @@ def check_plain_index(label, url, title, term_name, marker):
 
 
 def check_protected_index(label, url, title, term_name, markers):
-    body = fetch(label, url)
-    main = index_content(label, body, title, term_name)
-    contains(label, main, 'type="password"')
-    for marker in markers:
-        excludes(label, body, marker)
+    separator = "&" if urlsplit(url).query else "?"
+    for page_number, page_url in ((1, url), (2, f"{url}{separator}page=2")):
+        page_label = f"{label} page {page_number}"
+        body = fetch(page_label, page_url)
+        main = index_content(page_label, body, title, term_name)
+        contains(page_label, main, 'type="password"')
+        for marker in markers:
+            excludes(page_label, body, marker)
 
 
 def check_pagination(label, url, title, first_marker, second_marker):
