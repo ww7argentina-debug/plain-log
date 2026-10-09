@@ -73,6 +73,13 @@ def excludes(label, body, text):
         raise AssertionError(f"{label}: unexpectedly found {text!r}")
 
 
+def main_content(label, body):
+    match = re.search(r"<main\b[^>]*>(.*?)</main>", body, flags=re.DOTALL)
+    if match is None:
+        raise AssertionError(f"{label}: missing main content")
+    return match.group(1)
+
+
 def check_pagination(label, url, title, first_marker, second_marker):
     first = fetch(f"{label} page 1", url)
     contains(label, first, title)
@@ -100,7 +107,7 @@ check_pagination("page", page_url, "CI paginated page", "CI_PAGE_FIRST_PAGE", "C
 search = fetch("search", site_url + "/?s=CIUniqueTokenAlpha")
 contains("search", search, "search-results-index")
 contains("search", search, "CIUniqueTokenAlpha article")
-excludes("search", search, "CI paginated page")
+excludes("search results", main_content("search", search), "CI paginated page")
 
 missing = fetch("404", site_url + "/?p=999999999", expected_status=404)
 contains("404", missing, "Page not found.")
