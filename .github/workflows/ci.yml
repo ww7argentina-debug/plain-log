@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  php-syntax:
+    name: PHP syntax (${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.3']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: none
+      - name: Lint all PHP files
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -path './.git' -prune -o -type f -name '*.php' -print0 |
+            xargs -0 -r -n1 php -l
+
+  static:
+    name: Static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check JavaScript, JSON and theme structure
+        run: node tests/ci/check-theme.mjs
+      - name: Check translation file formats
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y gettext
+          for pot in languages/*.pot; do
+            msgcat --output-file=/dev/null "$pot"
+          done
+          for po in languages/*.po; do
+            msgfmt --check-format --output-file=/dev/null "$po"
+          done
+          for mo in languages/*.mo; do
+            msgunfmt --output-file=/dev/null "$mo"
+          done
+      - name: Check changed-line whitespace
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          PUSH_AFTER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == pull_request ]]; then
+            base=$(git merge-base "$PR_BASE_SHA" "$PR_HEAD_SHA")
+            head="$PR_HEAD_SHA"
+          else
+            base="$PUSH_BEFORE_SHA"
+            head="$PUSH_AFTER_SHA"
+            if [[ "$base" =~ ^0+$ ]]; then
+              base=$(git hash-object -t tree /dev/null)
+            fi
+          fi
+          git cat-file -e "$base^{object}"
+          git cat-file -e "$head^{commit}"
+          git diff --check "$base" "$head"
