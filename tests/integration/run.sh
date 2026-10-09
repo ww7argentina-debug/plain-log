@@ -54,7 +54,8 @@ post_id=$(wp post create --post_type=post --post_status=publish --post_title='CI
 page_id=$(wp post create --post_type=page --post_status=publish --post_name=ci-paginated-page --post_title='CI paginated page' --post_content=$'<p>CI_PAGE_FIRST_PAGE</p>\n<!--nextpage-->\n<p>CI_PAGE_SECOND_PAGE</p>' --porcelain)
 category_id=$(wp term create category 'CI Category Alpha' --slug=ci-category-alpha --porcelain)
 tag_id=$(wp term create post_tag 'CI Tag Alpha' --slug=ci-tag-alpha --porcelain)
-categories_page_id=$(wp post create --post_type=page --post_status=publish --post_name=categories --post_title='CI Categories index' --post_content=$'<!--nextpage-->\n<p>CI_CATEGORY_PAGE_TWO</p>' --porcelain)
+# Core ignores a nextpage marker at the start of the content.
+categories_page_id=$(wp post create --post_type=page --post_status=publish --post_name=categories --post_title='CI Categories index' --post_content=$' <!--nextpage-->\n<p>CI_CATEGORY_PAGE_TWO</p>' --porcelain)
 tags_page_id=$(wp post create --post_type=page --post_status=publish --post_name=tags --post_title='CI Tags index' --post_content=$'<p>CI_TAG_PAGE_ONE</p>\n<!--nextpage-->\n<!--nextpage-->\n<p>CI_TAG_PAGE_THREE</p>' --porcelain)
 if [[ ! "$post_id" =~ ^[0-9]+$ || ! "$page_id" =~ ^[0-9]+$ || ! "$category_id" =~ ^[0-9]+$ || ! "$tag_id" =~ ^[0-9]+$ || ! "$categories_page_id" =~ ^[0-9]+$ || ! "$tags_page_id" =~ ^[0-9]+$ ]]; then
   echo 'WP-CLI did not return numeric test post, page, or term IDs.' >&2
