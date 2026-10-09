@@ -68,8 +68,18 @@ post_url=$(wp post url "$post_id")
 page_url=$(wp post url "$page_id")
 categories_url=$(wp post url "$categories_page_id")
 tags_url=$(wp post url "$tags_page_id")
-echo "WordPress: $(wp core version)"
-echo "Web PHP: $("${compose[@]}" exec -T wordpress php -r 'echo PHP_VERSION;')"
+wordpress_version=$(wp core version)
+web_php_version=$("${compose[@]}" exec -T wordpress php -r 'echo PHP_VERSION;')
+wp_cli_version=$(wp cli version)
+mariadb_version=$("${compose[@]}" exec -T db sh -c 'MYSQL_PWD="$MARIADB_PASSWORD" mariadb --user="$MARIADB_USER" --batch --skip-column-names --execute="SELECT VERSION()"')
+echo "WordPress: $wordpress_version"
+echo "Web PHP: $web_php_version"
+echo "WP-CLI: $wp_cli_version"
+echo "MariaDB: $mariadb_version"
+if [[ "$wordpress_version" != 7.0.3 || "$web_php_version" != 8.3.* || "$wp_cli_version" != 'WP-CLI 2.12.0' || "$mariadb_version" != *10.11.19-MariaDB* ]]; then
+  echo 'Integration image software version mismatch.' >&2
+  exit 1
+fi
 echo "Test post ID: $post_id; test page IDs: $page_id, $categories_page_id, $tags_page_id"
 python3 tests/integration/check_http.py "$site_url" "$post_url" "$page_url" "$categories_url" "$tags_url"
 
