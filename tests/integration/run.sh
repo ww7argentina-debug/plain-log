@@ -60,8 +60,8 @@ if [[ ! "$post_id" =~ ^[0-9]+$ || ! "$page_id" =~ ^[0-9]+$ || ! "$category_id" =
   echo 'WP-CLI did not return numeric test post, page, or term IDs.' >&2
   exit 1
 fi
-wp post term add "$post_id" category "$category_id"
-wp post term add "$post_id" post_tag "$tag_id"
+wp post term add "$post_id" category 'CI Category Alpha'
+wp post term add "$post_id" post_tag 'CI Tag Alpha'
 
 post_url=$(wp post url "$post_id")
 page_url=$(wp post url "$page_id")
