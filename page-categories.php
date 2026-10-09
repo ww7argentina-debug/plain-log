@@ -16,6 +16,7 @@ get_header();
 	<?php
 	while ( have_posts() ) :
 		the_post();
+		global $multipage;
 
 		$page_title     = get_the_title();
 		$page_content   = get_the_content();
@@ -52,9 +53,21 @@ get_header();
 				<h1 class="single-entry-title"><?php echo esc_html( $page_title ); ?></h1>
 			</header>
 
-			<?php if ( '' !== trim( $page_content ) ) : ?>
+			<?php if ( '' !== trim( $page_content ) || $multipage ) : ?>
 				<div class="entry-content">
 					<?php the_content(); ?>
+					<?php
+					wp_link_pages(
+						array(
+							'before' => sprintf(
+								'<nav class="page-links" aria-label="%1$s"><span class="page-links-label">%2$s</span>',
+								esc_attr__( 'Page navigation', 'plain-log' ),
+								esc_html__( 'Pages:', 'plain-log' )
+							),
+							'after'  => '</nav>',
+						)
+					);
+					?>
 				</div>
 			<?php endif; ?>
 
