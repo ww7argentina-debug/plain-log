@@ -1,130 +1,96 @@
 # Plain Log
 
-A minimal, text-first WordPress theme for personal logs and technical notes.
+Plain Log 是一款簡潔、以文字為主的 WordPress 佈景主題，適合撰寫個人日誌與技術筆記。公開維護者為 [ww7argentina-debug](https://github.com/ww7argentina-debug/plain-log)。
 
-## Features
+## 功能特色
 
-- Classic WordPress theme with a chronological, text-first Home index
-- Consistent responsive canvas and surface layouts across Home, Single Posts,
-  archives, search, Pages, utility indexes, and 404 pages
-- Post ID friendly design with Category, Tag, year, and month archives
-- All-post Archive index, Search, and Categories/Tags discovery indexes
-- Single Post and Page layouts with WordPress multipage content navigation
-- WordPress Core comments, including threaded replies when enabled
-- Progressive code-block enhancement with visual line numbers and a Copy control
-- System dark mode, print styles, and a responsive, accessible baseline
-- Simplified Chinese (`zh_CN`) and Traditional Chinese (`zh_TW`) translations
-- Locale-aware Chinese system font stacks with no bundled or remote fonts
-- No build system or third-party frontend dependencies
+- WordPress 傳統佈景主題，首頁以時間順序呈現以文字為主的文章索引
+- 首頁、單篇文章、彙整、搜尋、頁面、索引頁及 404 頁面採用一致的響應式閱讀版面
+- 適合以文章 ID 設定固定網址，並支援分類、標籤、年份及月份彙整
+- 提供所有文章的彙整索引、搜尋，以及分類與標籤的瀏覽索引
+- 單篇文章與頁面版型支援 WordPress 原生內容分頁
+- 依 WordPress 核心提供留言功能，啟用時支援巢狀回覆
+- 以漸進增強方式為程式碼區塊加入視覺行號與「複製」按鈕
+- 依系統偏好使用深色模式，並提供列印樣式及具備基本無障礙支援的響應式版面
+- 提供簡體中文（`zh_CN`）與繁體中文（`zh_TW`）翻譯
+- 依中文語系選用系統字型，不內建字型，也不載入遠端字型
+- 不使用建置系統或第三方前端執行階段相依套件
 
-## Requirements
+## 系統需求
 
-- WordPress 7.0 or later
-- PHP 7.4 or later
+- WordPress 7.0 或更新版本
+- PHP 7.4 或更新版本
 
-Plain Log has been tested with WordPress 7.0.x. It does not require Node.js,
-npm, Composer, a plugin, or a build step.
+Plain Log 已在 WordPress 7.0.x 上測試。使用本佈景主題不需要 Node.js、npm、Composer、外掛或建置步驟。
 
-## Installation
+## 安裝方式
 
-1. Download the release ZIP.
-2. In WordPress, go to **Appearance → Themes → Add New → Upload Theme**.
-3. Upload `plain-log.zip`.
-4. Activate Plain Log.
+1. 下載發行版本的 ZIP 檔案。
+2. 在 WordPress 後台前往 **外觀 → 佈景主題 → 新增 → 上傳佈景主題**。
+3. 上傳 `plain-log.zip`。
+4. 啟用 Plain Log。
 
-Git users may instead clone the repository into
-`wp-content/themes/plain-log` and activate the Theme in WordPress.
+使用 Git 的讀者也可以將儲存庫複製到 `wp-content/themes/plain-log`，再於 WordPress 啟用佈景主題。
 
-## Recommended Site Setup
+## 建議的網站設定
 
-Plain Log provides presentation and templates. It does not create Pages or
-change WordPress settings when activated.
+Plain Log 只提供呈現方式與版型；啟用時不會建立頁面或變更 WordPress 設定。
 
-For the complete navigation and discovery layout, create these optional Pages
-yourself:
+若要使用完整的導覽與內容查找版面，請自行建立下列選用頁面：
 
-| Page | Slug |
+| 頁面 | 網址代稱 |
 | --- | --- |
-| Archive | `archive` |
-| Search | `search` |
-| Categories | `categories` |
-| Tags | `tags` |
-| About | `about` |
+| 彙整 | `archive` |
+| 搜尋 | `search` |
+| 分類 | `categories` |
+| 標籤 | `tags` |
+| 關於 | `about` |
 
-A suggested Primary Menu is **Home, Archive, Search, About**. Footer links for
-Categories and Tags appear only when the corresponding published Pages exist;
-the RSS link uses the WordPress posts feed.
+建議的主選單為**首頁、彙整、搜尋、關於**。只有對應的分類與標籤頁面已發佈時，頁尾才會顯示其連結；RSS 連結使用 WordPress 的文章訂閱摘要。
 
-The recommended post permalink is `/p/%post_id%/`. Configure it yourself under
-**Settings → Permalinks**; it is a recommendation, not a requirement. Plain Log
-never changes permalink, discussion, or other site settings on activation.
-Configure comments and pingbacks through WordPress discussion settings.
+建議將文章固定網址設為 `/p/%post_id%/`，請自行前往 **設定 → 固定網址** 調整。這只是建議，並非使用本佈景主題的必要條件。Plain Log 啟用時不會變更固定網址、討論或其他網站設定。請透過 WordPress 的討論設定管理留言與引用通知（pingback）。
 
-## Content and Navigation
+## 內容與導覽
 
-A normal Post consists of a title, content, one broad Category, and optional
-Tags. Use Pages for static content such as About. Featured Images are not part
-of the current Plain Log design.
+一般文章包含標題、內容、一個主要分類，以及選用的標籤。關於頁等靜態內容請使用頁面。目前的 Plain Log 設計不包含精選圖片功能。
 
-WordPress `<!--nextpage-->` pagination is supported on Single Posts and Pages.
-This uses WordPress Core multipage content behavior rather than a custom
-pagination system.
+WordPress `<!--nextpage-->` 支援單篇文章與頁面的內容分頁。此功能沿用 WordPress 核心的多頁內容機制，並非自訂分頁系統。
 
-## Code Blocks
+## 程式碼區塊
 
-Code blocks preserve whitespace and scroll horizontally when necessary. On a
-Single Post containing code, Plain Log progressively enhances code blocks with
-line numbers and a small Copy control. Line numbers are visual only and are not
-included in copied code. Plain Log does not add syntax highlighting.
+程式碼區塊會保留原有空白與縮排；內容過寬時可在區塊內水平捲動。單篇文章包含程式碼時，Plain Log 會以漸進增強方式加入視覺行號與「複製」按鈕。複製的程式碼不含行號。Plain Log 不提供語法高亮。
 
-## Comments
+## 留言
 
-Plain Log follows WordPress discussion settings and does not change them. When
-comments are closed and a post has no comments, no comments UI is shown. When
-comments are open, the WordPress Core comment list and form are available.
-Existing comments remain visible if comments are later closed.
+Plain Log 遵循 WordPress 的討論設定，不會擅自變更。留言關閉且文章沒有既有留言時，不顯示留言介面；留言開放時，提供 WordPress 核心的留言列表與表單。若日後關閉留言，既有留言仍會顯示。
 
-Threaded replies use the WordPress Core `comment-reply` script. Avatars are
-intentionally disabled by the Theme. Plain Log adds no third-party comment
-system or custom comment-submission logic.
+巢狀回覆使用 WordPress 核心的 `comment-reply` 指令碼。佈景主題刻意不顯示留言者大頭貼。Plain Log 不加入第三方留言系統，也不自行實作留言送出邏輯。
 
-## Localization and Fonts
+## 在地化與字型
 
-Source gettext message IDs are written in English. Plain Log bundles:
+原始 gettext 訊息 ID 使用英文。Plain Log 隨附：
 
-- Simplified Chinese (`zh_CN`)
-- Traditional Chinese for Taiwan (`zh_TW`)
+- 簡體中文（`zh_CN`）
+- 臺灣繁體中文（`zh_TW`）
 
-Frontend Chinese locales use installed system font candidates. `zh-TW` and
-`zh-Hant` prefer PingFang TC, Noto Sans TC, and Microsoft JhengHei; `zh-CN` and
-`zh-Hans` prefer PingFang SC, Noto Sans SC, and Microsoft YaHei; `zh-HK` prefers
-PingFang HK, Noto Sans HK, and Traditional Chinese system fallbacks. The actual
-rendered font depends on device availability. No `zh_HK` translation is bundled.
+網站前台的中文語系會優先選用裝置已安裝的系統字型。`zh-TW` 與 `zh-Hant` 優先使用 PingFang TC、Noto Sans TC 與 Microsoft JhengHei；`zh-CN` 與 `zh-Hans` 優先使用 PingFang SC、Noto Sans SC 與 Microsoft YaHei；`zh-HK` 優先使用 PingFang HK、Noto Sans HK 及繁體中文系統字型作為備用。實際顯示的字型取決於裝置上已安裝的字型。本佈景主題未隨附 `zh_HK` 翻譯。
 
-Plain Log bundles no font files and makes no Google Fonts or other remote font
-requests.
+Plain Log 不內建字型檔案，也不向 Google Fonts 或其他遠端字型服務發出請求。
 
-## Privacy and Dependencies
+## 隱私與相依套件
 
-Plain Log does not add analytics, telemetry, advertising, third-party tracking,
-remote fonts, or external CDN resources. Comment data, when comments are
-enabled, is handled by WordPress Core according to the site's discussion and
-privacy configuration.
+Plain Log 不加入分析、遙測、廣告、第三方追蹤、遠端字型或外部 CDN 資源。啟用留言時，留言資料由 WordPress 核心依網站的討論與隱私設定處理。
 
-The Theme has no third-party frontend runtime dependency and no build system.
+本佈景主題不需要第三方前端執行階段相依套件，也沒有建置系統。
 
-## Known Limitations
+## 已知限制
 
-Plain Log does not provide syntax highlighting, a table of contents, Featured
-Image UI, an SEO engine, analytics, a theme settings panel, a page builder, or
-AJAX search.
+Plain Log 不提供語法高亮、目錄、精選圖片介面、SEO 引擎、分析功能、佈景主題設定面板、頁面建構器或 AJAX 搜尋。
 
-## Development
+## 開發
 
-The Theme uses PHP, CSS, `theme.json`, and a small vanilla JavaScript file. It
-has no build system. The frozen V1 historical specification and project rules
-are documented in [`SPEC.md`](SPEC.md) and [`AGENTS.md`](AGENTS.md).
+本佈景主題使用 PHP、CSS、`theme.json` 及少量原生 JavaScript，不需要建置系統。歷史上凍結的 V1 規格與專案開發規則分別記錄於 [`SPEC.md`](SPEC.md) 與 [`AGENTS.md`](AGENTS.md)。
 
-## License
+## 授權條款
 
-Plain Log is licensed under [GPL-2.0-or-later](LICENSE).
+Plain Log 依 [GPL-2.0-or-later](LICENSE) 授權。原作者 wwintj 與其他貢獻者的歷史貢獻保留於 Git 提交紀錄。
